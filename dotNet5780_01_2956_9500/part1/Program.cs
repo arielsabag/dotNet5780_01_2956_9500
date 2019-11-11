@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace part1
 {
+   /// <summary>
+   ///  The program will randomly choose numbers betwenn 18 and 122 and put those numbers in two arrays that the size of each one is 20.
+   ///  And then the program will create a third array which is the difference between the numbers of the two arrays.
+   /// </summary>
     class Program
     {
         static Random r = new Random(DateTime.Now.Millisecond);
@@ -15,12 +19,11 @@ namespace part1
             int[] B = new int[20];
             int[] C = new int[20];
 
+
             for (int i = 0; i < 20; i++)
             {
-
                 A[i] = r.Next(18, 123);
                 B[i] = r.Next(18, 123);
-
             }
             for (int i = 0; i < 20; i++)
             {
@@ -29,19 +32,18 @@ namespace part1
 
             for (int i = 0; i < 20; i++)
             {
-                Console.Write( A[i]);
+                Console.Write("{0,-4}", A[i]);
             }
             Console.WriteLine(  );
             for (int i = 0; i < 20; i++)
             {
-                Console.Write( B[i]);
+                Console.Write("{0,-4}", B[i]);
             }
             Console.WriteLine();
             for (int i = 0; i < 20; i++)
             {
-                Console.Write( C[i]);
+                Console.Write("{0,-4}", C[i]);
             }
-
             Console.ReadKey();
         }
     }
