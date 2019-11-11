@@ -33,9 +33,44 @@ namespace part2
                 {
                     case (int)choice.requirment:
                         int month, day, length;
+                        bool occupied = false;
                         Console.WriteLine("enter day");
+                        day = Int32.Parse(Console.ReadLine());
+
                         Console.WriteLine("enter month");
+                        month = Int32.Parse(Console.ReadLine());
+
                         Console.WriteLine("enter length");
+                        length = Int32.Parse(Console.ReadLine());
+
+                        // length = 1
+                        if (true)
+                        {
+
+                        }
+                        // if first available
+                        if (!Calendar[month - 1, day - 1])
+                        {
+                            for (int i = 0; i < length-1; i++)
+                            {
+                                if (Calendar[month - 1, day-1+i])
+                                {
+
+                                }
+                            }
+                        }
+                        // if first not available
+                        if (Calendar[month - 1, day - 1])
+                        {
+                            for (int i = 0; i < length-1; i++)
+                            {
+                                if (Calendar[month - 1, day + i])
+                                {
+                                    occupied = true;
+                                }
+                            }
+                        }
+
                         break;
 
                     case (int)choice.schedule:
