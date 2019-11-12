@@ -1,9 +1,9 @@
-﻿using System;
+﻿using System; 
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using System.Collections;
 namespace part2
 {
     class Program
@@ -34,14 +34,16 @@ namespace part2
                 switch (decision)
                 {
                     case (int)choice.requirment:
-                        NewMethod(Calendar);
+                        addVacation(Calendar);
                         break;
 
                     case (int)choice.schedule:
-                        go(Calendar);
+                        printSchedule(Calendar);
                         break;
 
                     case (int)choice.occupied:
+                        printOccupied(Calendar);
+
                         break;
 
                     case (int)choice.exit:
@@ -55,85 +57,73 @@ namespace part2
         }
 
 
-
-
-
-
-        private static void go(bool[,] Calendar)
+        private static void printOccupied(bool[,] Calendar)
         {
+            double countOccpiedDays = 0;
             for (int i = 0; i < 12; i++)
             {
                 for (int j = 0; j < 31; j++)
                 {
                     if (Calendar[i, j])
                     {
-
-                        if ((i == 0) && (j == 0))
-                        {
-
-                            Console.Write("{0} {1} {2}", i, "/", j);
-
-                        }
-                        else if ((i == 11) && (j == 30))
-                        {
-
-                            Console.WriteLine(" - ");
-                            Console.Write("{0} {1} {2}", i + 1, "/", j + 1);
-
-                        }
-                        else if ((i == 0))
-                        {
-                            if (!Calendar[i, j - 1])
-                            {
-                                Console.Write("{0} {1} {2}", i, "/", j);
-
-                            }
-                        }
-                        else if ((i == 11))
-                        {
-                            if(!Calendar[i, j + 1])
-                                        {
-                                Console.WriteLine(" - ");
-                                Console.Write("{0} {1} {2}", i + 1, "/", j + 1);
-                            }
-                        }
-                        else
-                        {
-
-
-                            if (!Calendar[i - 1, 30])
-                            {
-                                Console.Write("{0} {1} {2}", i, "/", j);
-                            }
-                            else if (!Calendar[i + 1, 0])
-                            {
-                                Console.WriteLine(" ---- ");
-                                Console.Write("{0} {1} {2}", i + 1, "/", j + 1);
-                            }
-                            else if (!Calendar[i, j - 1])
-                            {
-                                Console.Write("{0} {1} {2}", i, "/", j);
-
-                            }
-                            else if (!Calendar[i, j + 1])
-                            {
-                                Console.WriteLine(" - ");
-                                Console.Write("{0} {1} {2}", i + 1, "/", j + 1);
-                            }
-                        }
-
+                        countOccpiedDays++;
                     }
-
+                 
                 }
-
             }
-            Console.WriteLine();
+            Console.WriteLine("Occuied days in this year: " + countOccpiedDays);
+            Console.WriteLine("Occupied year percentage : " + countOccpiedDays/372);
+
+        }
+
+
+
+        private static void printSchedule(bool[,] Calendar)
+        {
+            ArrayList tmpArr = new ArrayList();
+            for (int i = 0; i < 12; i++)
+            {
+                for (int j = 0; j < 31; j++)
+                {
+                    if (Calendar[i,j])
+                    {
+                       int  tempI = i + 1;
+                        int tempJ = j + 1;
+
+                        tmpArr.Add(tempJ + "/" + tempI);
+                    }
+                    else
+                    {
+                        tmpArr.Add("empty");
+                    }
+                }
+            }
+            int state = 0;
+            for (int i = 0; i < tmpArr.Count; i++)
+            {
+                if ((i==0)&&(tmpArr[i].ToString()!="empty"))
+                {
+                    Console.Write(tmpArr[i].ToString() + " - ");
+                    state++;
+                }
+                else if ((tmpArr[i].ToString()!="empty")&&(state%2==0))
+                {
+                    Console.Write(tmpArr[i].ToString() + " - ");
+                    state++;
+                }
+                else if ((tmpArr[i].ToString() == "empty")&&(state %2 ==1))
+                {
+                    state++;
+                    Console.WriteLine(tmpArr[i-1].ToString());
+                }
+            }
         }
     
 
-    private static void NewMethod(bool[,] Calendar)
+    private static void addVacation(bool[,] Calendar)
     {
-        int month, tmpMonth, day, tmpDay, length;
+          
+            int month, tmpMonth, day, tmpDay, length;
         bool occupied;
 
         occupied = false;
@@ -166,7 +156,7 @@ namespace part2
         }
         else
         {
-            for (int i = 0; i < length - 1; i++) // iterate on all days and chech if available
+            for (int i = 0; i < length - 1; i++) // iterate on all days and check if available
             {
                 if (tmpDay + i > 30)
                 {
@@ -197,8 +187,9 @@ namespace part2
                 if (tmpDay + j > 30)
                 {
                     tmpMonth++;
-                    tmpDay = (tmpDay + i) % 31;
-                    j = 0;
+                        // tmpDay = (tmpDay + i) % 31;
+                        tmpDay = 0;
+                        j = 0;
                 }
                 Calendar[tmpMonth - 1, tmpDay + j] = true;
             }
@@ -207,3 +198,72 @@ namespace part2
     }
 }
 }
+
+
+ //for (int i = 0; i< 12; i++)
+ //           {
+ //               for (int j = 0; j< 31; j++)
+ //               {
+ //                   if (Calendar[i, j])
+ //                   {
+
+ //                       if ((i == 0) && (j == 0))
+ //                       {
+
+ //                           Console.Write("{0} {1} {2}", i, "/", j);
+
+ //                       }
+ //                       else if ((i == 11) && (j == 30))
+ //                       {
+
+ //                           Console.WriteLine(" - ");
+ //                           Console.Write("{0} {1} {2}", i + 1, "/", j + 1);
+
+ //                       }
+ //                       else if ((i == 0))
+ //                       {
+ //                           if (!Calendar[i, j - 1])
+ //                           {
+ //                               Console.Write("{0} {1} {2}", i, "/", j);
+
+ //                           }
+ //                       }
+ //                       else if ((i == 11))
+ //                       {
+ //                           if(!Calendar[i, j + 1])
+ //                                       {
+ //                               Console.WriteLine(" - ");
+ //                               Console.Write("{0} {1} {2}", i + 1, "/", j + 1);
+ //                           }
+ //                       }
+ //                       else
+ //                       {
+
+
+ //                           if (!Calendar[i - 1, 30])
+ //                           {
+ //                               Console.Write("{0} {1} {2}", i, "/", j);
+ //                           }
+ //                           else if (!Calendar[i + 1, 0])
+ //                           {
+ //                               Console.WriteLine(" ---- ");
+ //                               Console.Write("{0} {1} {2}", i + 1, "/", j + 1);
+ //                           }
+ //                           else if (!Calendar[i, j - 1])
+ //                           {
+ //                               Console.Write("{0} {1} {2}", i, "/", j);
+
+ //                           }
+ //                           else if (!Calendar[i, j + 1])
+ //                           {
+ //                               Console.WriteLine(" - ");
+ //                               Console.Write("{0} {1} {2}", i + 1, "/", j + 1);
+ //                           }
+ //                       }
+
+ //                   }
+
+ //               }
+
+ //           }
+ //           Console.WriteLine();
