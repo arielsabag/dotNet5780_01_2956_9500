@@ -19,7 +19,7 @@ namespace part1
             int[] B = new int[20];
             int[] C = new int[20];
 
-
+            
             for (int i = 0; i < 20; i++)
             {
                 A[i] = r.Next(18, 123);

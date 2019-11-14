@@ -1,4 +1,4 @@
-﻿using System; 
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +8,9 @@ namespace part2
 {
     class Program
     {
+        /// <summary>
+        /// User's choice
+        /// </summary>
         enum choice { requirment = 1, schedule, occupied, exit };
         static void Main(string[] args)
         {
@@ -21,16 +24,30 @@ namespace part2
                     //Calendar[i, j] = false;
                 }
             }
-
             do
             {
-                Console.WriteLine("choose 1 for customers requirment for hospitality");
-                Console.WriteLine("choose 2 to view the annual list of all accomadation periods");
-                Console.WriteLine("choose 3 to display the total number of days occupied per year and the percentage of annual occupancy");
-                Console.WriteLine("choose 4 to exit");
-                int decision = Int32.Parse(Console.ReadLine());
+                bool ok = false;
+                int decision = 0;
+                while (!ok)
+                {
+                    Console.WriteLine("choose 1 for customers requirment for hospitality");
+                    Console.WriteLine("choose 2 to view the annual list of all accomadation periods");
+                    Console.WriteLine("choose 3 to display the total number of days occupied per year and the percentage of annual occupancy");
+                    Console.WriteLine("choose 4 to exit");
+                    string input = Console.ReadLine();
 
+                    if (("1" == input) || ("2" == input) || ("3" == input) || ("4" == input))
+                    {
+                        ok = true;
+                        decision = Int32.Parse(input);
+                    }
+                    else
+                    {
+                        Console.WriteLine("Not valid input");
+                    }
+                }
 
+                
                 switch (decision)
                 {
                     case (int)choice.requirment:
@@ -43,20 +60,20 @@ namespace part2
 
                     case (int)choice.occupied:
                         printOccupied(Calendar);
-
                         break;
 
                     case (int)choice.exit:
                         exit = true;
                         break;
                 }
-
             } while (!exit);
-
             Console.ReadKey();
         }
 
-
+        /// <summary>
+        /// The function prints out the number of occupied days oft fo all year, and it's percentage.
+        /// </summary>
+        /// <param name="Calendar">Calendaris the data base in which the hosting scedule saved inside</param>
         private static void printOccupied(bool[,] Calendar)
         {
             double countOccpiedDays = 0;
@@ -68,16 +85,17 @@ namespace part2
                     {
                         countOccpiedDays++;
                     }
-                 
                 }
             }
             Console.WriteLine("Occuied days in this year: " + countOccpiedDays);
-            Console.WriteLine("Occupied year percentage : " + countOccpiedDays/372);
-
+            Console.WriteLine("Occupied year percentage : " + countOccpiedDays / 372);
         }
 
 
-
+        /// <summary>
+        ///  The function prints out for each hosting period it's first and last dayof hosting.
+        /// </summary>
+        /// <param name="Calendar">Calendaris the data base in which the hosting scedule saved inside</param>
         private static void printSchedule(bool[,] Calendar)
         {
             ArrayList tmpArr = new ArrayList();
@@ -85,12 +103,9 @@ namespace part2
             {
                 for (int j = 0; j < 31; j++)
                 {
-                    if (Calendar[i,j])
+                    if (Calendar[i, j])
                     {
-                       int  tempI = i + 1;
-                        int tempJ = j + 1;
-
-                        tmpArr.Add(tempJ + "/" + tempI);
+                        tmpArr.Add((j + 1) + "/" + (i + 1));
                     }
                     else
                     {
@@ -101,169 +116,98 @@ namespace part2
             int state = 0;
             for (int i = 0; i < tmpArr.Count; i++)
             {
-                if ((i==0)&&(tmpArr[i].ToString()!="empty"))
+                if ((i == 0) && (tmpArr[i].ToString() != "empty"))
                 {
                     Console.Write(tmpArr[i].ToString() + " - ");
                     state++;
                 }
-                else if ((tmpArr[i].ToString()!="empty")&&(state%2==0))
+                else if ((tmpArr[i].ToString() != "empty") && (state % 2 == 0))
                 {
                     Console.Write(tmpArr[i].ToString() + " - ");
                     state++;
                 }
-                else if ((tmpArr[i].ToString() == "empty")&&(state %2 ==1))
+                else if ((tmpArr[i].ToString() == "empty") && (state % 2 == 1))
                 {
                     state++;
-                    Console.WriteLine(tmpArr[i-1].ToString());
+                    Console.WriteLine(tmpArr[i - 1].ToString());
                 }
             }
         }
-    
 
-    private static void addVacation(bool[,] Calendar)
-    {
-          
+        /// <summary>
+        /// Function that add hosting period by user's requirments.
+        /// </summary>
+        /// <param name="Calendar">Calendaris the data base in which the hosting scedule saved inside</param>
+        private static void addVacation(bool[,] Calendar)
+        {
+
             int month, tmpMonth, day, tmpDay, length;
-        bool occupied;
+            bool occupied;
 
-        occupied = false;
-        Console.WriteLine("enter day");
-        day = Int32.Parse(Console.ReadLine());
-        tmpDay = day;
-
-        Console.WriteLine("enter month");
-        month = Int32.Parse(Console.ReadLine());
-        tmpMonth = month;
-
-        Console.WriteLine("enter length");
-        length = Int32.Parse(Console.ReadLine());
-
-
-        // If length = 1 and the first day is occiupied
-        if ((1 == length) && (Calendar[month - 1, day - 1]))
-        {
-            if (32 == day + length)
-            {
-                if (Calendar[month, 0])
-                {
-                    occupied = true;
-                }
-            }
-            else if (Calendar[month - 1, day])
-            {
-                occupied = true;
-            }
-        }
-        else
-        {
-            for (int i = 0; i < length - 1; i++) // iterate on all days and check if available
-            {
-                if (tmpDay + i > 30)
-                {
-                    tmpMonth++;
-                    tmpDay = (tmpDay + i) % 31;
-                }
-                if (Calendar[tmpMonth - 1, tmpDay])
-                {
-                    occupied = true;
-                }
-            }
-        }
-        if (occupied)
-        {
-            Console.WriteLine("the request was denied");
-        }
-        else
-        {
-            Console.WriteLine("your request has been approved");
-
+            occupied = false;
+            Console.WriteLine("enter day");
+            day = Int32.Parse(Console.ReadLine());
             tmpDay = day;
+
+            Console.WriteLine("enter month");
+            month = Int32.Parse(Console.ReadLine());
             tmpMonth = month;
-            Calendar[tmpMonth - 1, day - 1] = true;
 
-            for (int i = 0, j = 0; i < length - 1; i++, j++) // iterate on all days and check if available
+            Console.WriteLine("enter length");
+            length = Int32.Parse(Console.ReadLine());
+
+
+            // If length = 1 and the first day is occiupied
+            if ((1 == length) && (Calendar[month - 1, day - 1]))
             {
-
-                if (tmpDay + j > 30)
+                if (32 == day + length)
                 {
-                    tmpMonth++;
-                        // tmpDay = (tmpDay + i) % 31;
+                    if (Calendar[month, 0])
+                    {
+                        occupied = true;
+                    }
+                }
+                else if (Calendar[month - 1, day])
+                {
+                    occupied = true;
+                }
+            }
+            else
+            {
+                for (int i = 0; i < length - 1; i++) // iterate on all days and check if available
+                {
+                    if (tmpDay + i > 30)
+                    {
+                        tmpMonth++;
+                        tmpDay = (tmpDay + i) % 31;
+                    }
+                    if (Calendar[tmpMonth - 1, tmpDay])
+                    {
+                        occupied = true;
+                    }
+                }
+            }
+            if (occupied)
+            {
+                Console.WriteLine("the request was denied");
+            }
+            else
+            {
+                Console.WriteLine("your request has been approved");
+                tmpDay = day;
+                tmpMonth = month;
+                Calendar[tmpMonth - 1, day - 1] = true;
+                for (int i = 0, j = 0; i < length - 1; i++, j++) // iterate on all days and check if available
+                {
+                    if (tmpDay + j > 30)
+                    {
+                        tmpMonth++;
                         tmpDay = 0;
                         j = 0;
+                    }
+                    Calendar[tmpMonth - 1, tmpDay + j] = true;
                 }
-                Calendar[tmpMonth - 1, tmpDay + j] = true;
             }
-
         }
     }
 }
-}
-
-
- //for (int i = 0; i< 12; i++)
- //           {
- //               for (int j = 0; j< 31; j++)
- //               {
- //                   if (Calendar[i, j])
- //                   {
-
- //                       if ((i == 0) && (j == 0))
- //                       {
-
- //                           Console.Write("{0} {1} {2}", i, "/", j);
-
- //                       }
- //                       else if ((i == 11) && (j == 30))
- //                       {
-
- //                           Console.WriteLine(" - ");
- //                           Console.Write("{0} {1} {2}", i + 1, "/", j + 1);
-
- //                       }
- //                       else if ((i == 0))
- //                       {
- //                           if (!Calendar[i, j - 1])
- //                           {
- //                               Console.Write("{0} {1} {2}", i, "/", j);
-
- //                           }
- //                       }
- //                       else if ((i == 11))
- //                       {
- //                           if(!Calendar[i, j + 1])
- //                                       {
- //                               Console.WriteLine(" - ");
- //                               Console.Write("{0} {1} {2}", i + 1, "/", j + 1);
- //                           }
- //                       }
- //                       else
- //                       {
-
-
- //                           if (!Calendar[i - 1, 30])
- //                           {
- //                               Console.Write("{0} {1} {2}", i, "/", j);
- //                           }
- //                           else if (!Calendar[i + 1, 0])
- //                           {
- //                               Console.WriteLine(" ---- ");
- //                               Console.Write("{0} {1} {2}", i + 1, "/", j + 1);
- //                           }
- //                           else if (!Calendar[i, j - 1])
- //                           {
- //                               Console.Write("{0} {1} {2}", i, "/", j);
-
- //                           }
- //                           else if (!Calendar[i, j + 1])
- //                           {
- //                               Console.WriteLine(" - ");
- //                               Console.Write("{0} {1} {2}", i + 1, "/", j + 1);
- //                           }
- //                       }
-
- //                   }
-
- //               }
-
- //           }
- //           Console.WriteLine();
